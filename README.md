@@ -1,4 +1,4 @@
-### A website to improve Package Management in IIIT Bangalore
+## A website to improve Package Management in IIIT Bangalore
 
 
 
