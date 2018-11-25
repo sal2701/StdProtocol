@@ -1,10 +1,13 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, PackageInfo
 from flask_login import current_user, login_user
-from app.models import User
+from app.models import User, Pkg
 from flask_login import logout_user, login_required
 from werkzeug.urls import url_parse
+from is_admin import is_admin
+
+admins = ['sal','tanmay','saad','saiakash']
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -38,7 +41,7 @@ def index():
                 'body':'the avengers movie was so cool!'
             }
           ]
-    return render_template('index.html',title='Home',posts=posts)
+    return render_template('index.html',title='Home',posts=posts,admin=admins)
 
 @app.route('/logout')
 def logout():
@@ -59,3 +62,24 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
+@app.route('/addpkg', methods=['GET','POST'])
+@login_required
+def addpkg():
+    allowed()
+    form = PackageInfo()
+    if is_admin(current_user.username):
+        pkg = Pkg(package=form.package.data, courier=form.courier.data)
+        db.session.add(pkg)
+        db.session.commit()
+        pkgs = Pkg.query.all()
+        return render_template('addpkg.html', form = form, admin = admins,pkgs = pkgs)
+
+
+def allowed():
+    form = PackageInfo()
+
+    if is_admin(current_user.username):
+        return render_template('addpkg.html', form=form, admin = admins)
+    else:
+        flash("You're not Admin")
+        return redirect(url_for('index'))
