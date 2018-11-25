@@ -1,13 +1,13 @@
 <html>
 	<head>
 		{% if title %}
-		<title>{{title}} - Microblog </title>
+		<title>{{title}} - IIITB Package System </title>
 		{% else %}
-		<title>Welcome to Microblog</title>
+		<title>Welcome to IIITB</title>
 		{% endif %}
 	</head>
-	<body>
-		<div>Microblog: 
+	<center><body>
+		<div>IIITB Parcel collection system: 
 			<a href="{{ url_for('index') }}">Home</a>
 			{% if current_user.is_anonymous %}
 			<a href="{{ url_for('login') }}">Login</a>
@@ -16,6 +16,13 @@
 			{% endif %}
 		</div>
 		<hr>
+		<br>
+		<br>
+		<br>
+		<img src="logo.jpg">
+		<br>
+		<br>
+		<br>
 		{% with messages=get_flashed_messages() %}
 		{% if messages %}
 		<ul>
@@ -27,4 +34,5 @@
 		{% endwith %}
 		{% block content %}{% endblock %}
 	</body>
+    </center>
 </html>

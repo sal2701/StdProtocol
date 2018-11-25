@@ -6,6 +6,7 @@ from app.models import User, Pkg
 from flask_login import logout_user, login_required
 from werkzeug.urls import url_parse
 from is_admin import is_admin
+import os
 
 admins = ['sal','tanmay','saad','saiakash']
 
@@ -30,17 +31,7 @@ def login():
 @app.route('/index')
 @login_required
 def index():
-    user={'username':"Sal"}
-    posts=[
-            {
-                'author':{'username':'John'},
-                'body':'Beautiful day in portland'
-            },
-            {
-                'author':{'username':'susan'},
-                'body':'the avengers movie was so cool!'
-            }
-          ]
+    posts = Pkg.query.all()
     return render_template('index.html',title='Home',posts=posts,admin=admins)
 
 @app.route('/logout')
@@ -54,7 +45,7 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(username=form.username.data, phone=form.phone.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
